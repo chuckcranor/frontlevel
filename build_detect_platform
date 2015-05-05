@@ -20,8 +20,8 @@
 #
 # The PLATFORM_CCFLAGS and PLATFORM_CXXFLAGS might include the following:
 #
-#       -DLEVELDB_ATOMIC_PRESENT     if <atomic> is present
-#       -DLEVELDB_PLATFORM_POSIX     for Posix-based platforms
+#       -DFRONTLEVEL_ATOMIC_PRESENT     if <atomic> is present
+#       -DFRONTLEVEL_PLATFORM_POSIX     for Posix-based platforms
 #       -DSNAPPY                     if the Snappy library is present
 #
 
@@ -124,7 +124,7 @@ case "$TARGET_OS" in
         ;;
     OS_ANDROID_CROSSCOMPILE)
         PLATFORM=OS_ANDROID
-        COMMON_FLAGS="$MEMCMP_FLAG -D_REENTRANT -DOS_ANDROID -DLEVELDB_PLATFORM_POSIX"
+        COMMON_FLAGS="$MEMCMP_FLAG -D_REENTRANT -DOS_ANDROID -DFRONTLEVEL_PLATFORM_POSIX"
         PLATFORM_LDFLAGS=""  # All pthread features are in the Android C library
         PORT_FILE=port/port_posix.cc
         CROSS_COMPILE=true
@@ -161,7 +161,7 @@ DIRS="$PREFIX/db $PREFIX/util $PREFIX/table"
 set -f # temporarily disable globbing so that our patterns aren't expanded
 PRUNE_TEST="-name *test*.cc -prune"
 PRUNE_BENCH="-name *_bench.cc -prune"
-PRUNE_TOOL="-name leveldb_main.cc -prune"
+PRUNE_TOOL="-name frontlevel_main.cc -prune"
 PORTABLE_FILES=`find $DIRS $PRUNE_TEST -o $PRUNE_BENCH -o $PRUNE_TOOL -o -name '*.cc' -print | sort | sed "s,^$PREFIX/,," | tr "\n" " "`
 
 set +f # re-enable globbing
@@ -175,7 +175,7 @@ if [ "$CROSS_COMPILE" = "true" ]; then
     # Cross-compiling; do not try any compilation tests.
     true
 else
-    CXXOUTPUT="${TMPDIR}/leveldb_build_detect_platform-cxx.$$"
+    CXXOUTPUT="${TMPDIR}/frontlevel_build_detect_platform-cxx.$$"
 
     # If -std=c++0x works, use <atomic> as fallback for when memory barriers
     # are not available.
@@ -184,10 +184,10 @@ else
       int main() {}
 EOF
     if [ "$?" = 0 ]; then
-        COMMON_FLAGS="$COMMON_FLAGS -DLEVELDB_PLATFORM_POSIX -DLEVELDB_ATOMIC_PRESENT"
+        COMMON_FLAGS="$COMMON_FLAGS -DFRONTLEVEL_PLATFORM_POSIX -DFRONTLEVEL_ATOMIC_PRESENT"
         PLATFORM_CXXFLAGS="-std=c++0x"
     else
-        COMMON_FLAGS="$COMMON_FLAGS -DLEVELDB_PLATFORM_POSIX"
+        COMMON_FLAGS="$COMMON_FLAGS -DFRONTLEVEL_PLATFORM_POSIX"
     fi
 
     # Test whether Snappy library is installed
