@@ -152,11 +152,11 @@ case "$TARGET_OS" in
         exit 1
 esac
 
-# We want to make a list of all cc files within util, db, table, and helpers
+# We want to make a list of all cc files within DIRS
 # except for the test and benchmark files. By default, find will output a list
 # of all files matching either rule, so we need to append -print to make the
 # prune take effect.
-DIRS="$PREFIX/db $PREFIX/util $PREFIX/table"
+DIRS="$PREFIX/db $PREFIX/util"
 
 set -f # temporarily disable globbing so that our patterns aren't expanded
 PRUNE_TEST="-name *test*.cc -prune"
@@ -190,16 +190,16 @@ EOF
         COMMON_FLAGS="$COMMON_FLAGS -DFRONTLEVEL_PLATFORM_POSIX"
     fi
 
-    # Test whether Snappy library is installed
-    # http://code.google.com/p/snappy/
-    $CXX $CXXFLAGS -x c++ - -o $CXXOUTPUT 2>/dev/null  <<EOF
-      #include <snappy.h>
-      int main() {}
-EOF
-    if [ "$?" = 0 ]; then
-        COMMON_FLAGS="$COMMON_FLAGS -DSNAPPY"
-        PLATFORM_LIBS="$PLATFORM_LIBS -lsnappy"
-    fi
+#     # Test whether Snappy library is installed
+#     # http://code.google.com/p/snappy/
+#     $CXX $CXXFLAGS -x c++ - -o $CXXOUTPUT 2>/dev/null  <<EOF
+#       #include <snappy.h>
+#       int main() {}
+# EOF
+#     if [ "$?" = 0 ]; then
+#         COMMON_FLAGS="$COMMON_FLAGS -DSNAPPY"
+#         PLATFORM_LIBS="$PLATFORM_LIBS -lsnappy"
+#     fi
 
     # Test whether tcmalloc is available
     $CXX $CXXFLAGS -x c++ - -o $CXXOUTPUT -ltcmalloc 2>/dev/null  <<EOF
