@@ -8,10 +8,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "leveldb/env.h"
-#include "leveldb/slice.h"
+#include "frontlevel/env.h"
+#include "frontlevel/slice.h"
 
-namespace leveldb {
+namespace frontlevel {
 
 void AppendNumberTo(std::string* str, uint64_t num) {
   char buf[30];
@@ -69,4 +69,4 @@ bool ConsumeDecimalNumber(Slice* in, uint64_t* val) {
   return (digits > 0);
 }
 
-}  // namespace leveldb
+}  // namespace frontlevel

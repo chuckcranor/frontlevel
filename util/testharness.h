@@ -2,28 +2,28 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 
-#ifndef STORAGE_LEVELDB_UTIL_TESTHARNESS_H_
-#define STORAGE_LEVELDB_UTIL_TESTHARNESS_H_
+#ifndef STORAGE_FRONTLEVEL_UTIL_TESTHARNESS_H_
+#define STORAGE_FRONTLEVEL_UTIL_TESTHARNESS_H_
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
-#include "leveldb/env.h"
-#include "leveldb/slice.h"
+#include "frontlevel/env.h"
+#include "frontlevel/slice.h"
 #include "util/random.h"
 
-namespace leveldb {
+namespace frontlevel {
 namespace test {
 
 // Run some of the tests registered by the TEST() macro.  If the
-// environment variable "LEVELDB_TESTS" is not set, runs all tests.
+// environment variable "FRONTLEVEL_TESTS" is not set, runs all tests.
 // Otherwise, runs only the tests whose name contains the value of
-// "LEVELDB_TESTS" as a substring.  E.g., suppose the tests are:
+// "FRONTLEVEL_TESTS" as a substring.  E.g., suppose the tests are:
 //    TEST(Foo, Hello) { ... }
 //    TEST(Foo, World) { ... }
-// LEVELDB_TESTS=Hello will run the first test
-// LEVELDB_TESTS=o     will run both tests
-// LEVELDB_TESTS=Junk  will run no tests
+// FRONTLEVEL_TESTS=Hello will run the first test
+// FRONTLEVEL_TESTS=o     will run both tests
+// FRONTLEVEL_TESTS=Junk  will run no tests
 //
 // Returns 0 if all tests pass.
 // Dies or returns a non-zero value if some test fails.
@@ -102,14 +102,14 @@ class Tester {
   }
 };
 
-#define ASSERT_TRUE(c) ::leveldb::test::Tester(__FILE__, __LINE__).Is((c), #c)
-#define ASSERT_OK(s) ::leveldb::test::Tester(__FILE__, __LINE__).IsOk((s))
-#define ASSERT_EQ(a,b) ::leveldb::test::Tester(__FILE__, __LINE__).IsEq((a),(b))
-#define ASSERT_NE(a,b) ::leveldb::test::Tester(__FILE__, __LINE__).IsNe((a),(b))
-#define ASSERT_GE(a,b) ::leveldb::test::Tester(__FILE__, __LINE__).IsGe((a),(b))
-#define ASSERT_GT(a,b) ::leveldb::test::Tester(__FILE__, __LINE__).IsGt((a),(b))
-#define ASSERT_LE(a,b) ::leveldb::test::Tester(__FILE__, __LINE__).IsLe((a),(b))
-#define ASSERT_LT(a,b) ::leveldb::test::Tester(__FILE__, __LINE__).IsLt((a),(b))
+#define ASSERT_TRUE(c) ::frontlevel::test::Tester(__FILE__, __LINE__).Is((c), #c)
+#define ASSERT_OK(s) ::frontlevel::test::Tester(__FILE__, __LINE__).IsOk((s))
+#define ASSERT_EQ(a,b) ::frontlevel::test::Tester(__FILE__, __LINE__).IsEq((a),(b))
+#define ASSERT_NE(a,b) ::frontlevel::test::Tester(__FILE__, __LINE__).IsNe((a),(b))
+#define ASSERT_GE(a,b) ::frontlevel::test::Tester(__FILE__, __LINE__).IsGe((a),(b))
+#define ASSERT_GT(a,b) ::frontlevel::test::Tester(__FILE__, __LINE__).IsGt((a),(b))
+#define ASSERT_LE(a,b) ::frontlevel::test::Tester(__FILE__, __LINE__).IsLe((a),(b))
+#define ASSERT_LT(a,b) ::frontlevel::test::Tester(__FILE__, __LINE__).IsLt((a),(b))
 
 #define TCONCAT(a,b) TCONCAT1(a,b)
 #define TCONCAT1(a,b) a##b
@@ -124,7 +124,7 @@ class TCONCAT(_Test_,name) : public base {                              \
   }                                                                     \
 };                                                                      \
 bool TCONCAT(_Test_ignored_,name) =                                     \
-  ::leveldb::test::RegisterTest(#base, #name, &TCONCAT(_Test_,name)::_RunIt); \
+  ::frontlevel::test::RegisterTest(#base, #name, &TCONCAT(_Test_,name)::_RunIt); \
 void TCONCAT(_Test_,name)::_Run()
 
 // Register the specified test.  Typically not used directly, but
@@ -133,6 +133,6 @@ extern bool RegisterTest(const char* base, const char* name, void (*func)());
 
 
 }  // namespace test
-}  // namespace leveldb
+}  // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_UTIL_TESTHARNESS_H_
+#endif  // STORAGE_FRONTLEVEL_UTIL_TESTHARNESS_H_

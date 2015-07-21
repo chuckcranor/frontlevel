@@ -5,15 +5,15 @@
 // Must not be included from any .h files to avoid polluting the namespace
 // with macros.
 
-#ifndef STORAGE_LEVELDB_UTIL_LOGGING_H_
-#define STORAGE_LEVELDB_UTIL_LOGGING_H_
+#ifndef STORAGE_FRONTLEVEL_UTIL_LOGGING_H_
+#define STORAGE_FRONTLEVEL_UTIL_LOGGING_H_
 
 #include <stdio.h>
 #include <stdint.h>
 #include <string>
 #include "port/port.h"
 
-namespace leveldb {
+namespace frontlevel {
 
 class Slice;
 class WritableFile;
@@ -38,6 +38,6 @@ extern std::string EscapeString(const Slice& value);
 // unspecified state.
 extern bool ConsumeDecimalNumber(Slice* in, uint64_t* val);
 
-}  // namespace leveldb
+}  // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_UTIL_LOGGING_H_
+#endif  // STORAGE_FRONTLEVEL_UTIL_LOGGING_H_

@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-namespace leveldb {
+namespace frontlevel {
 namespace test {
 
 namespace {
@@ -34,7 +34,7 @@ bool RegisterTest(const char* base, const char* name, void (*func)()) {
 }
 
 int RunAllTests() {
-  const char* matcher = getenv("LEVELDB_TESTS");
+  const char* matcher = getenv("FRONTLEVEL_TESTS");
 
   int num = 0;
   if (tests != NULL) {
@@ -74,4 +74,4 @@ int RandomSeed() {
 }
 
 }  // namespace test
-}  // namespace leveldb
+}  // namespace frontlevel

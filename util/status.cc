@@ -4,9 +4,9 @@
 
 #include <stdio.h>
 #include "port/port.h"
-#include "leveldb/status.h"
+#include "frontlevel/status.h"
 
-namespace leveldb {
+namespace frontlevel {
 
 const char* Status::CopyState(const char* state) {
   uint32_t size;
@@ -72,4 +72,4 @@ std::string Status::ToString() const {
   }
 }
 
-}  // namespace leveldb
+}  // namespace frontlevel

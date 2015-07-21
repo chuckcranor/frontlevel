@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 
-#ifndef STORAGE_LEVELDB_UTIL_TESTUTIL_H_
-#define STORAGE_LEVELDB_UTIL_TESTUTIL_H_
+#ifndef STORAGE_FRONTLEVEL_UTIL_TESTUTIL_H_
+#define STORAGE_FRONTLEVEL_UTIL_TESTUTIL_H_
 
-#include "leveldb/env.h"
-#include "leveldb/slice.h"
+#include "frontlevel/env.h"
+#include "frontlevel/slice.h"
 #include "util/random.h"
 
-namespace leveldb {
+namespace frontlevel {
 namespace test {
 
 // Store in *dst a random string of length "len" and return a Slice that
@@ -48,6 +48,6 @@ class ErrorEnv : public EnvWrapper {
 };
 
 }  // namespace test
-}  // namespace leveldb
+}  // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_UTIL_TESTUTIL_H_
+#endif  // STORAGE_FRONTLEVEL_UTIL_TESTUTIL_H_
