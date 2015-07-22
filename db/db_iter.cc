@@ -7,14 +7,14 @@
 #include "db/filename.h"
 #include "db/db_impl.h"
 #include "db/dbformat.h"
-#include "leveldb/env.h"
-#include "leveldb/iterator.h"
+#include "frontlevel/env.h"
+#include "frontlevel/iterator.h"
 #include "port/port.h"
 #include "util/logging.h"
 #include "util/mutexlock.h"
 #include "util/random.h"
 
-namespace leveldb {
+namespace frontlevel {
 
 #if 0
 static void DumpInternalIter(Iterator* iter) {
@@ -48,16 +48,13 @@ class DBIter: public Iterator {
     kReverse
   };
 
-  DBIter(DBImpl* db, const Comparator* cmp, Iterator* iter, SequenceNumber s,
-         uint32_t seed)
+  DBIter(DBImpl* db, const Comparator* cmp, Iterator* iter, SequenceNumber s)
       : db_(db),
         user_comparator_(cmp),
         iter_(iter),
         sequence_(s),
         direction_(kForward),
-        valid_(false),
-        rnd_(seed),
-        bytes_counter_(RandomPeriod()) {
+        valid_(false) {
   }
   virtual ~DBIter() {
     delete iter_;
@@ -103,11 +100,6 @@ class DBIter: public Iterator {
     }
   }
 
-  // Pick next gap with average value of config::kReadBytesPeriod.
-  ssize_t RandomPeriod() {
-    return rnd_.Uniform(2*config::kReadBytesPeriod);
-  }
-
   DBImpl* db_;
   const Comparator* const user_comparator_;
   Iterator* const iter_;
@@ -119,9 +111,6 @@ class DBIter: public Iterator {
   Direction direction_;
   bool valid_;
 
-  Random rnd_;
-  ssize_t bytes_counter_;
-
   // No copying allowed
   DBIter(const DBIter&);
   void operator=(const DBIter&);
@@ -130,11 +119,6 @@ class DBIter: public Iterator {
 inline bool DBIter::ParseKey(ParsedInternalKey* ikey) {
   Slice k = iter_->key();
   ssize_t n = k.size() + iter_->value().size();
-  bytes_counter_ -= n;
-  while (bytes_counter_ < 0) {
-    bytes_counter_ += RandomPeriod();
-    db_->RecordReadSample(k);
-  }
   if (!ParseInternalKey(k, ikey)) {
     status_ = Status::Corruption("corrupted internal key in DBIter");
     return false;
@@ -309,9 +293,8 @@ Iterator* NewDBIterator(
     DBImpl* db,
     const Comparator* user_key_comparator,
     Iterator* internal_iter,
-    SequenceNumber sequence,
-    uint32_t seed) {
-  return new DBIter(db, user_key_comparator, internal_iter, sequence, seed);
+    SequenceNumber sequence) {
+  return new DBIter(db, user_key_comparator, internal_iter, sequence);
 }
 
-}  // namespace leveldb
+}  // namespace frontlevel

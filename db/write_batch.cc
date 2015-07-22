@@ -13,15 +13,15 @@
 //    len: varint32
 //    data: uint8[len]
 
-#include "leveldb/write_batch.h"
+#include "frontlevel/write_batch.h"
 
-#include "leveldb/db.h"
+#include "frontlevel/db.h"
 #include "db/dbformat.h"
 #include "db/memtable.h"
 #include "db/write_batch_internal.h"
 #include "util/coding.h"
 
-namespace leveldb {
+namespace frontlevel {
 
 // WriteBatch header has an 8-byte sequence number followed by a 4-byte count.
 static const size_t kHeader = 12;
@@ -144,4 +144,4 @@ void WriteBatchInternal::Append(WriteBatch* dst, const WriteBatch* src) {
   dst->rep_.append(src->rep_.data() + kHeader, src->rep_.size() - kHeader);
 }
 
-}  // namespace leveldb
+}  // namespace frontlevel

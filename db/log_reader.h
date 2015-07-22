@@ -2,16 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 
-#ifndef STORAGE_LEVELDB_DB_LOG_READER_H_
-#define STORAGE_LEVELDB_DB_LOG_READER_H_
+#ifndef STORAGE_FRONTLEVEL_DB_LOG_READER_H_
+#define STORAGE_FRONTLEVEL_DB_LOG_READER_H_
 
 #include <stdint.h>
 
 #include "db/log_format.h"
-#include "leveldb/slice.h"
-#include "leveldb/status.h"
+#include "frontlevel/slice.h"
+#include "frontlevel/status.h"
 
-namespace leveldb {
+namespace frontlevel {
 
 class SequentialFile;
 
@@ -103,6 +103,6 @@ class Reader {
 };
 
 }  // namespace log
-}  // namespace leveldb
+}  // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_DB_LOG_READER_H_
+#endif  // STORAGE_FRONTLEVEL_DB_LOG_READER_H_

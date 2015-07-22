@@ -6,10 +6,10 @@
 #include <stdio.h>
 #include "db/filename.h"
 #include "db/dbformat.h"
-#include "leveldb/env.h"
+#include "frontlevel/env.h"
 #include "util/logging.h"
 
-namespace leveldb {
+namespace frontlevel {
 
 // A utility routine: write "data" to the named file and Sync() it.
 extern Status WriteStringToFileSync(Env* env, const Slice& data,
@@ -27,24 +27,6 @@ static std::string MakeFileName(const std::string& name, uint64_t number,
 std::string LogFileName(const std::string& name, uint64_t number) {
   assert(number > 0);
   return MakeFileName(name, number, "log");
-}
-
-std::string TableFileName(const std::string& name, uint64_t number) {
-  assert(number > 0);
-  return MakeFileName(name, number, "ldb");
-}
-
-std::string SSTTableFileName(const std::string& name, uint64_t number) {
-  assert(number > 0);
-  return MakeFileName(name, number, "sst");
-}
-
-std::string DescriptorFileName(const std::string& dbname, uint64_t number) {
-  assert(number > 0);
-  char buf[100];
-  snprintf(buf, sizeof(buf), "/MANIFEST-%06llu",
-           static_cast<unsigned long long>(number));
-  return dbname + buf;
 }
 
 std::string CurrentFileName(const std::string& dbname) {
@@ -75,8 +57,7 @@ std::string OldInfoLogFileName(const std::string& dbname) {
 //    dbname/LOCK
 //    dbname/LOG
 //    dbname/LOG.old
-//    dbname/MANIFEST-[0-9]+
-//    dbname/[0-9]+.(log|sst|ldb)
+//    dbname/[0-9]+.log
 bool ParseFileName(const std::string& fname,
                    uint64_t* number,
                    FileType* type) {
@@ -90,17 +71,6 @@ bool ParseFileName(const std::string& fname,
   } else if (rest == "LOG" || rest == "LOG.old") {
     *number = 0;
     *type = kInfoLogFile;
-  } else if (rest.starts_with("MANIFEST-")) {
-    rest.remove_prefix(strlen("MANIFEST-"));
-    uint64_t num;
-    if (!ConsumeDecimalNumber(&rest, &num)) {
-      return false;
-    }
-    if (!rest.empty()) {
-      return false;
-    }
-    *type = kDescriptorFile;
-    *number = num;
   } else {
     // Avoid strtoull() to keep filename format independent of the
     // current locale
@@ -111,8 +81,6 @@ bool ParseFileName(const std::string& fname,
     Slice suffix = rest;
     if (suffix == Slice(".log")) {
       *type = kLogFile;
-    } else if (suffix == Slice(".sst") || suffix == Slice(".ldb")) {
-      *type = kTableFile;
     } else if (suffix == Slice(".dbtmp")) {
       *type = kTempFile;
     } else {
@@ -124,14 +92,11 @@ bool ParseFileName(const std::string& fname,
 }
 
 Status SetCurrentFile(Env* env, const std::string& dbname,
-                      uint64_t descriptor_number) {
-  // Remove leading "dbname/" and add newline to manifest file name
-  std::string manifest = DescriptorFileName(dbname, descriptor_number);
-  Slice contents = manifest;
-  assert(contents.starts_with(dbname + "/"));
-  contents.remove_prefix(dbname.size() + 1);
+                      uint64_t descriptor_number, const char *compname) {
+
+  std::string contents = compname;
   std::string tmp = TempFileName(dbname, descriptor_number);
-  Status s = WriteStringToFileSync(env, contents.ToString() + "\n", tmp);
+  Status s = WriteStringToFileSync(env, contents + "\n", tmp);
   if (s.ok()) {
     s = env->RenameFile(tmp, CurrentFileName(dbname));
   }
@@ -139,6 +104,7 @@ Status SetCurrentFile(Env* env, const std::string& dbname,
     env->DeleteFile(tmp);
   }
   return s;
+
 }
 
-}  // namespace leveldb
+}  // namespace frontlevel

@@ -2,56 +2,33 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 
-#ifndef STORAGE_LEVELDB_DB_DBFORMAT_H_
-#define STORAGE_LEVELDB_DB_DBFORMAT_H_
+#ifndef STORAGE_FRONTLEVEL_DB_DBFORMAT_H_
+#define STORAGE_FRONTLEVEL_DB_DBFORMAT_H_
 
 #include <stdio.h>
-#include "leveldb/comparator.h"
-#include "leveldb/db.h"
-#include "leveldb/filter_policy.h"
-#include "leveldb/slice.h"
-#include "leveldb/table_builder.h"
+#include "frontlevel/comparator.h"
+#include "frontlevel/db.h"
+#include "frontlevel/slice.h"
 #include "util/coding.h"
 #include "util/logging.h"
 
-namespace leveldb {
+namespace frontlevel {
 
-// Grouping of constants.  We may want to make some of these
-// parameters set via options.
-namespace config {
-static const int kNumLevels = 7;
-
-// Level-0 compaction is started when we hit this many files.
-static const int kL0_CompactionTrigger = 4;
-
-// Soft limit on number of level-0 files.  We slow down writes at this point.
-static const int kL0_SlowdownWritesTrigger = 8;
-
-// Maximum number of level-0 files.  We stop writes at this point.
-static const int kL0_StopWritesTrigger = 12;
-
-// Maximum level to which a new compacted memtable is pushed if it
-// does not create overlap.  We try to push to level 2 to avoid the
-// relatively expensive level 0=>1 compactions and to avoid some
-// expensive manifest file operations.  We do not push all the way to
-// the largest level since that can generate a lot of wasted disk
-// space if the same key space is being repeatedly overwritten.
-static const int kMaxMemCompactLevel = 2;
-
-// Approximate gap in bytes between samples of data read during iteration.
-static const int kReadBytesPeriod = 1048576;
-
-}  // namespace config
-
+/*
+ * kept this internal key stuff mainly to make it easier to reuse 
+ * code.   e.g. memtable uses skiplist and skiplist doesn't do
+ * delete/duplicate keys.
+ */
 class InternalKey;
 
-// Value types encoded as the last component of internal keys.
+// Value types
 // DO NOT CHANGE THESE ENUM VALUES: they are embedded in the on-disk
-// data structures.
+// data structures (log file).
 enum ValueType {
   kTypeDeletion = 0x0,
   kTypeValue = 0x1
 };
+
 // kValueTypeForSeek defines the ValueType that should be passed when
 // constructing a ParsedInternalKey object for seeking to a particular
 // sequence number (since we sort sequence numbers in decreasing order
@@ -60,6 +37,7 @@ enum ValueType {
 // ValueType, not the lowest).
 static const ValueType kValueTypeForSeek = kTypeValue;
 
+/* prob. not going to use seq number */
 typedef uint64_t SequenceNumber;
 
 // We leave eight bits empty at the bottom so a type and sequence#
@@ -117,25 +95,10 @@ class InternalKeyComparator : public Comparator {
   explicit InternalKeyComparator(const Comparator* c) : user_comparator_(c) { }
   virtual const char* Name() const;
   virtual int Compare(const Slice& a, const Slice& b) const;
-  virtual void FindShortestSeparator(
-      std::string* start,
-      const Slice& limit) const;
-  virtual void FindShortSuccessor(std::string* key) const;
 
   const Comparator* user_comparator() const { return user_comparator_; }
 
   int Compare(const InternalKey& a, const InternalKey& b) const;
-};
-
-// Filter policy wrapper that converts from internal keys to user keys
-class InternalFilterPolicy : public FilterPolicy {
- private:
-  const FilterPolicy* const user_policy_;
- public:
-  explicit InternalFilterPolicy(const FilterPolicy* p) : user_policy_(p) { }
-  virtual const char* Name() const;
-  virtual void CreateFilter(const Slice* keys, int n, std::string* dst) const;
-  virtual bool KeyMayMatch(const Slice& key, const Slice& filter) const;
 };
 
 // Modules in this directory should keep internal keys wrapped inside
@@ -225,6 +188,5 @@ inline LookupKey::~LookupKey() {
   if (start_ != space_) delete[] start_;
 }
 
-}  // namespace leveldb
-
-#endif  // STORAGE_LEVELDB_DB_DBFORMAT_H_
+}  // namespace frontlevel
+#endif  // STORAGE_FRONTLEVEL_DB_DBFORMAT_H_
