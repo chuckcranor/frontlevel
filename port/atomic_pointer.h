@@ -19,7 +19,7 @@
 #define PORT_ATOMIC_POINTER_H_
 
 #include <stdint.h>
-#ifdef LEVELDB_ATOMIC_PRESENT
+#ifdef FRONTLEVEL_ATOMIC_PRESENT
 #include <atomic>
 #endif
 #ifdef OS_WIN
@@ -41,7 +41,7 @@
 #define ARCH_CPU_PPC_FAMILY 1
 #endif
 
-namespace leveldb {
+namespace frontlevel {
 namespace port {
 
 // Define MemoryBarrier() if available
@@ -49,14 +49,14 @@ namespace port {
 #if defined(OS_WIN) && defined(COMPILER_MSVC) && defined(ARCH_CPU_X86_FAMILY)
 // windows.h already provides a MemoryBarrier(void) macro
 // http://msdn.microsoft.com/en-us/library/ms684208(v=vs.85).aspx
-#define LEVELDB_HAVE_MEMORY_BARRIER
+#define FRONTLEVEL_HAVE_MEMORY_BARRIER
 
 // Mac OS
 #elif defined(OS_MACOSX)
 inline void MemoryBarrier() {
   OSMemoryBarrier();
 }
-#define LEVELDB_HAVE_MEMORY_BARRIER
+#define FRONTLEVEL_HAVE_MEMORY_BARRIER
 
 // Gcc on x86
 #elif defined(ARCH_CPU_X86_FAMILY) && defined(__GNUC__)
@@ -65,7 +65,7 @@ inline void MemoryBarrier() {
   // this idiom. Also see http://en.wikipedia.org/wiki/Memory_ordering.
   __asm__ __volatile__("" : : : "memory");
 }
-#define LEVELDB_HAVE_MEMORY_BARRIER
+#define FRONTLEVEL_HAVE_MEMORY_BARRIER
 
 // Sun Studio
 #elif defined(ARCH_CPU_X86_FAMILY) && defined(__SUNPRO_CC)
@@ -74,7 +74,7 @@ inline void MemoryBarrier() {
   // this idiom. Also see http://en.wikipedia.org/wiki/Memory_ordering.
   asm volatile("" : : : "memory");
 }
-#define LEVELDB_HAVE_MEMORY_BARRIER
+#define FRONTLEVEL_HAVE_MEMORY_BARRIER
 
 // ARM Linux
 #elif defined(ARCH_CPU_ARM_FAMILY) && defined(__linux__)
@@ -92,14 +92,14 @@ typedef void (*LinuxKernelMemoryBarrierFunc)(void);
 inline void MemoryBarrier() {
   (*(LinuxKernelMemoryBarrierFunc)0xffff0fa0)();
 }
-#define LEVELDB_HAVE_MEMORY_BARRIER
+#define FRONTLEVEL_HAVE_MEMORY_BARRIER
 
 // ARM64
 #elif defined(ARCH_CPU_ARM64_FAMILY)
 inline void MemoryBarrier() {
   asm volatile("dmb sy" : : : "memory");
 }
-#define LEVELDB_HAVE_MEMORY_BARRIER
+#define FRONTLEVEL_HAVE_MEMORY_BARRIER
 
 // PPC
 #elif defined(ARCH_CPU_PPC_FAMILY) && defined(__GNUC__)
@@ -108,12 +108,12 @@ inline void MemoryBarrier() {
   // Perhaps by having separate barriers for acquire and release ops.
   asm volatile("sync" : : : "memory");
 }
-#define LEVELDB_HAVE_MEMORY_BARRIER
+#define FRONTLEVEL_HAVE_MEMORY_BARRIER
 
 #endif
 
 // AtomicPointer built using platform-specific MemoryBarrier()
-#if defined(LEVELDB_HAVE_MEMORY_BARRIER)
+#if defined(FRONTLEVEL_HAVE_MEMORY_BARRIER)
 class AtomicPointer {
  private:
   void* rep_;
@@ -134,7 +134,7 @@ class AtomicPointer {
 };
 
 // AtomicPointer based on <cstdatomic>
-#elif defined(LEVELDB_ATOMIC_PRESENT)
+#elif defined(FRONTLEVEL_ATOMIC_PRESENT)
 class AtomicPointer {
  private:
   std::atomic<void*> rep_;
@@ -221,13 +221,13 @@ class AtomicPointer {
 
 #endif
 
-#undef LEVELDB_HAVE_MEMORY_BARRIER
+#undef FRONTLEVEL_HAVE_MEMORY_BARRIER
 #undef ARCH_CPU_X86_FAMILY
 #undef ARCH_CPU_ARM_FAMILY
 #undef ARCH_CPU_ARM64_FAMILY
 #undef ARCH_CPU_PPC_FAMILY
 
 }  // namespace port
-}  // namespace leveldb
+}  // namespace frontlevel
 
 #endif  // PORT_ATOMIC_POINTER_H_

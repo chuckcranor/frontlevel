@@ -7,10 +7,10 @@
 // specific port_<platform>.h file.  Use this file as a reference for
 // how to port this package to a new platform.
 
-#ifndef STORAGE_LEVELDB_PORT_PORT_EXAMPLE_H_
-#define STORAGE_LEVELDB_PORT_PORT_EXAMPLE_H_
+#ifndef STORAGE_FRONTLEVEL_PORT_PORT_EXAMPLE_H_
+#define STORAGE_FRONTLEVEL_PORT_PORT_EXAMPLE_H_
 
-namespace leveldb {
+namespace frontlevel {
 namespace port {
 
 // TODO(jorlow): Many of these belong more in the environment class rather than
@@ -62,12 +62,12 @@ class CondVar {
 
 // Thread-safe initialization.
 // Used as follows:
-//      static port::OnceType init_control = LEVELDB_ONCE_INIT;
+//      static port::OnceType init_control = FRONTLEVEL_ONCE_INIT;
 //      static void Initializer() { ... do something ...; }
 //      ...
 //      port::InitOnce(&init_control, &Initializer);
 typedef intptr_t OnceType;
-#define LEVELDB_ONCE_INIT 0
+#define FRONTLEVEL_ONCE_INIT 0
 extern void InitOnce(port::OnceType*, void (*initializer)());
 
 // A type that holds a pointer that can be read or written atomically
@@ -130,6 +130,6 @@ extern bool Snappy_Uncompress(const char* input_data, size_t input_length,
 extern bool GetHeapProfile(void (*func)(void*, const char*, int), void* arg);
 
 }  // namespace port
-}  // namespace leveldb
+}  // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_PORT_PORT_EXAMPLE_H_
+#endif  // STORAGE_FRONTLEVEL_PORT_PORT_EXAMPLE_H_

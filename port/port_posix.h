@@ -4,8 +4,8 @@
 //
 // See port_example.h for documentation for the following types/functions.
 
-#ifndef STORAGE_LEVELDB_PORT_PORT_POSIX_H_
-#define STORAGE_LEVELDB_PORT_PORT_POSIX_H_
+#ifndef STORAGE_FRONTLEVEL_PORT_PORT_POSIX_H_
+#define STORAGE_FRONTLEVEL_PORT_PORT_POSIX_H_
 
 #undef PLATFORM_IS_LITTLE_ENDIAN
 #if defined(OS_MACOSX)
@@ -71,7 +71,7 @@
 #define fdatasync fsync
 #endif
 
-namespace leveldb {
+namespace frontlevel {
 namespace port {
 
 static const bool kLittleEndian = PLATFORM_IS_LITTLE_ENDIAN;
@@ -110,7 +110,7 @@ class CondVar {
 };
 
 typedef pthread_once_t OnceType;
-#define LEVELDB_ONCE_INIT PTHREAD_ONCE_INIT
+#define FRONTLEVEL_ONCE_INIT PTHREAD_ONCE_INIT
 extern void InitOnce(OnceType* once, void (*initializer)());
 
 inline bool Snappy_Compress(const char* input, size_t length,
@@ -149,6 +149,6 @@ inline bool GetHeapProfile(void (*func)(void*, const char*, int), void* arg) {
 }
 
 } // namespace port
-} // namespace leveldb
+} // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_PORT_PORT_POSIX_H_
+#endif  // STORAGE_FRONTLEVEL_PORT_PORT_POSIX_H_
