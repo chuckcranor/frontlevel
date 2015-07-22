@@ -4,14 +4,12 @@
 
 #include "helpers/memenv/memenv.h"
 
-#include "db/db_impl.h"
-#include "leveldb/db.h"
-#include "leveldb/env.h"
+#include "frontlevel/env.h"
 #include "util/testharness.h"
 #include <string>
 #include <vector>
 
-namespace leveldb {
+namespace frontlevel {
 
 class MemEnvTest {
  public:
@@ -182,51 +180,8 @@ TEST(MemEnvTest, LargeWrite) {
   delete [] scratch;
 }
 
-TEST(MemEnvTest, DBTest) {
-  Options options;
-  options.create_if_missing = true;
-  options.env = env_;
-  DB* db;
-
-  const Slice keys[] = {Slice("aaa"), Slice("bbb"), Slice("ccc")};
-  const Slice vals[] = {Slice("foo"), Slice("bar"), Slice("baz")};
-
-  ASSERT_OK(DB::Open(options, "/dir/db", &db));
-  for (size_t i = 0; i < 3; ++i) {
-    ASSERT_OK(db->Put(WriteOptions(), keys[i], vals[i]));
-  }
-
-  for (size_t i = 0; i < 3; ++i) {
-    std::string res;
-    ASSERT_OK(db->Get(ReadOptions(), keys[i], &res));
-    ASSERT_TRUE(res == vals[i]);
-  }
-
-  Iterator* iterator = db->NewIterator(ReadOptions());
-  iterator->SeekToFirst();
-  for (size_t i = 0; i < 3; ++i) {
-    ASSERT_TRUE(iterator->Valid());
-    ASSERT_TRUE(keys[i] == iterator->key());
-    ASSERT_TRUE(vals[i] == iterator->value());
-    iterator->Next();
-  }
-  ASSERT_TRUE(!iterator->Valid());
-  delete iterator;
-
-  DBImpl* dbi = reinterpret_cast<DBImpl*>(db);
-  ASSERT_OK(dbi->TEST_CompactMemTable());
-
-  for (size_t i = 0; i < 3; ++i) {
-    std::string res;
-    ASSERT_OK(db->Get(ReadOptions(), keys[i], &res));
-    ASSERT_TRUE(res == vals[i]);
-  }
-
-  delete db;
-}
-
-}  // namespace leveldb
+}  // namespace frontlevel
 
 int main(int argc, char** argv) {
-  return leveldb::test::RunAllTests();
+  return frontlevel::test::RunAllTests();
 }
