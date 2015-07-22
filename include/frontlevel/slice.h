@@ -12,15 +12,15 @@
 // non-const method, all threads accessing the same Slice must use
 // external synchronization.
 
-#ifndef STORAGE_LEVELDB_INCLUDE_SLICE_H_
-#define STORAGE_LEVELDB_INCLUDE_SLICE_H_
+#ifndef STORAGE_FRONTLEVEL_INCLUDE_SLICE_H_
+#define STORAGE_FRONTLEVEL_INCLUDE_SLICE_H_
 
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
 #include <string>
 
-namespace leveldb {
+namespace frontlevel {
 
 class Slice {
  public:
@@ -103,7 +103,7 @@ inline int Slice::compare(const Slice& b) const {
   return r;
 }
 
-}  // namespace leveldb
+}  // namespace frontlevel
 
 
-#endif  // STORAGE_LEVELDB_INCLUDE_SLICE_H_
+#endif  // STORAGE_FRONTLEVEL_INCLUDE_SLICE_H_

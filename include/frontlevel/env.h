@@ -10,16 +10,16 @@
 // All Env implementations are safe for concurrent access from
 // multiple threads without any external synchronization.
 
-#ifndef STORAGE_LEVELDB_INCLUDE_ENV_H_
-#define STORAGE_LEVELDB_INCLUDE_ENV_H_
+#ifndef STORAGE_FRONTLEVEL_INCLUDE_ENV_H_
+#define STORAGE_FRONTLEVEL_INCLUDE_ENV_H_
 
 #include <string>
 #include <vector>
 #include <stdarg.h>
 #include <stdint.h>
-#include "leveldb/status.h"
+#include "frontlevel/status.h"
 
-namespace leveldb {
+namespace frontlevel {
 
 class FileLock;
 class Logger;
@@ -37,7 +37,7 @@ class Env {
   // system.  Sophisticated users may wish to provide their own Env
   // implementation instead of relying on this default environment.
   //
-  // The result of Default() belongs to leveldb and must never be deleted.
+  // The result of Default() belongs to frontlevel and must never be deleted.
   static Env* Default();
 
   // Create a brand new sequentially-readable file with the specified name.
@@ -328,6 +328,6 @@ class EnvWrapper : public Env {
   Env* target_;
 };
 
-}  // namespace leveldb
+}  // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_INCLUDE_ENV_H_
+#endif  // STORAGE_FRONTLEVEL_INCLUDE_ENV_H_

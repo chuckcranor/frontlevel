@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 
-#ifndef STORAGE_LEVELDB_INCLUDE_COMPARATOR_H_
-#define STORAGE_LEVELDB_INCLUDE_COMPARATOR_H_
+#ifndef STORAGE_FRONTLEVEL_INCLUDE_COMPARATOR_H_
+#define STORAGE_FRONTLEVEL_INCLUDE_COMPARATOR_H_
 
 #include <string>
 
-namespace leveldb {
+namespace frontlevel {
 
 class Slice;
 
@@ -37,20 +37,6 @@ class Comparator {
   // by any clients of this package.
   virtual const char* Name() const = 0;
 
-  // Advanced functions: these are used to reduce the space requirements
-  // for internal data structures like index blocks.
-
-  // If *start < limit, changes *start to a short string in [start,limit).
-  // Simple comparator implementations may return with *start unchanged,
-  // i.e., an implementation of this method that does nothing is correct.
-  virtual void FindShortestSeparator(
-      std::string* start,
-      const Slice& limit) const = 0;
-
-  // Changes *key to a short string >= *key.
-  // Simple comparator implementations may return with *key unchanged,
-  // i.e., an implementation of this method that does nothing is correct.
-  virtual void FindShortSuccessor(std::string* key) const = 0;
 };
 
 // Return a builtin comparator that uses lexicographic byte-wise
@@ -58,6 +44,6 @@ class Comparator {
 // must not be deleted.
 extern const Comparator* BytewiseComparator();
 
-}  // namespace leveldb
+}  // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_INCLUDE_COMPARATOR_H_
+#endif  // STORAGE_FRONTLEVEL_INCLUDE_COMPARATOR_H_

@@ -2,30 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 
-#ifndef STORAGE_LEVELDB_INCLUDE_OPTIONS_H_
-#define STORAGE_LEVELDB_INCLUDE_OPTIONS_H_
+#ifndef STORAGE_FRONTLEVEL_INCLUDE_OPTIONS_H_
+#define STORAGE_FRONTLEVEL_INCLUDE_OPTIONS_H_
 
 #include <stddef.h>
 
-namespace leveldb {
+namespace frontlevel {
 
-class Cache;
 class Comparator;
 class Env;
-class FilterPolicy;
 class Logger;
-class Snapshot;
-
-// DB contents are stored in a set of blocks, each of which holds a
-// sequence of key,value pairs.  Each block may be compressed before
-// being stored in a file.  The following enum describes which
-// compression method (if any) is used to compress a block.
-enum CompressionType {
-  // NOTE: do not change the values of existing entries, as these are
-  // part of the persistent format on disk.
-  kNoCompression     = 0x0,
-  kSnappyCompression = 0x1
-};
 
 // Options to control the behavior of a database (passed to DB::Open)
 struct Options {
@@ -82,59 +68,6 @@ struct Options {
   // Default: 4MB
   size_t write_buffer_size;
 
-  // Number of open files that can be used by the DB.  You may need to
-  // increase this if your database has a large working set (budget
-  // one open file per 2MB of working set).
-  //
-  // Default: 1000
-  int max_open_files;
-
-  // Control over blocks (user data is stored in a set of blocks, and
-  // a block is the unit of reading from disk).
-
-  // If non-NULL, use the specified cache for blocks.
-  // If NULL, leveldb will automatically create and use an 8MB internal cache.
-  // Default: NULL
-  Cache* block_cache;
-
-  // Approximate size of user data packed per block.  Note that the
-  // block size specified here corresponds to uncompressed data.  The
-  // actual size of the unit read from disk may be smaller if
-  // compression is enabled.  This parameter can be changed dynamically.
-  //
-  // Default: 4K
-  size_t block_size;
-
-  // Number of keys between restart points for delta encoding of keys.
-  // This parameter can be changed dynamically.  Most clients should
-  // leave this parameter alone.
-  //
-  // Default: 16
-  int block_restart_interval;
-
-  // Compress blocks using the specified compression algorithm.  This
-  // parameter can be changed dynamically.
-  //
-  // Default: kSnappyCompression, which gives lightweight but fast
-  // compression.
-  //
-  // Typical speeds of kSnappyCompression on an Intel(R) Core(TM)2 2.4GHz:
-  //    ~200-500MB/s compression
-  //    ~400-800MB/s decompression
-  // Note that these speeds are significantly faster than most
-  // persistent storage speeds, and therefore it is typically never
-  // worth switching to kNoCompression.  Even if the input data is
-  // incompressible, the kSnappyCompression implementation will
-  // efficiently detect that and will switch to uncompressed mode.
-  CompressionType compression;
-
-  // If non-NULL, use the specified filter policy to reduce disk reads.
-  // Many applications will benefit from passing the result of
-  // NewBloomFilterPolicy() here.
-  //
-  // Default: NULL
-  const FilterPolicy* filter_policy;
-
   // Create an Options object with default values for all fields.
   Options();
 };
@@ -151,17 +84,9 @@ struct ReadOptions {
   // Default: true
   bool fill_cache;
 
-  // If "snapshot" is non-NULL, read as of the supplied snapshot
-  // (which must belong to the DB that is being read and which must
-  // not have been released).  If "snapshot" is NULL, use an implicit
-  // snapshot of the state at the beginning of this read operation.
-  // Default: NULL
-  const Snapshot* snapshot;
-
   ReadOptions()
       : verify_checksums(false),
-        fill_cache(true),
-        snapshot(NULL) {
+        fill_cache(true) {
   }
 };
 
@@ -190,6 +115,6 @@ struct WriteOptions {
   }
 };
 
-}  // namespace leveldb
+}  // namespace frontlevel
 
-#endif  // STORAGE_LEVELDB_INCLUDE_OPTIONS_H_
+#endif  // STORAGE_FRONTLEVEL_INCLUDE_OPTIONS_H_
