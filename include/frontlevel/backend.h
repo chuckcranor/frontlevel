@@ -24,20 +24,6 @@ class Backend {
   virtual ~Backend() {/* base class dtor is a no-op */};
   
   /*
-   * set key to value.  the only write option is sync.
-   */
-  virtual Status Put(const WriteOptions &options,
-                     const Slice &key,
-                     const Slice &value) = 0;
-
-  /*
-   * delete a key from the store.   note that this copies the leveldb
-   * semantics: no error if "key" wasn't present in the DB.
-   */
-  virtual Status Delete(const WriteOptions &options,
-                        const Slice& key) = 0;
-
-  /*
    * batch a set of key/value mods to the backend.   if the backend
    * doesn't support batch ops, it can unpack and do them one at a time.
    *

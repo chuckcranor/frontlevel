@@ -54,38 +54,6 @@ class LevelDBBackend : public Backend {
   }
   
   /*
-   * set key to value.  the only write option is sync.
-   */
-  Status Put(const WriteOptions &options,
-                     const Slice &key,
-                     const Slice &value) {
-    leveldb::WriteOptions wopt;
-    leveldb::Slice lkey(key.data(), key.size());
-    leveldb::Slice lval(value.data(), value.size());
-    leveldb::Status lrv;
-    wopt.sync = options.sync;
-
-    lrv = dbp_->Put(wopt, lkey, lval);
-
-    return(lstat2fstat(lrv));
-  }
-
-  /*
-   * delete a key from the store.   note that this copies the leveldb
-   * semantics: no error if "key" wasn't present in the DB.
-   */
-  Status Delete(const WriteOptions &options, const Slice& key) {
-    leveldb::WriteOptions wopt;
-    leveldb::Slice lkey(key.data(), key.size());
-    leveldb::Status lrv;
-    wopt.sync = options.sync;
-  
-    lrv = dbp_->Delete(wopt, lkey);
-
-    return(lstat2fstat(lrv));
-  }
-
-  /*
    * batch a set of key/value mods to the backend.   if the backend
    * doesn't support batch ops, it can unpack and do them one at a time.
    */
