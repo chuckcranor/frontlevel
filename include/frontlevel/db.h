@@ -92,11 +92,5 @@ class DB {
 // Be very careful using this method.
 Status DestroyDB(const std::string& name, const Options& options);
 
-// If a DB cannot be opened, you may attempt to call this method to
-// resurrect as much of the contents of the database as possible.
-// Some data may be lost, so be careful when calling this function
-// on a database that contains important information.
-Status RepairDB(const std::string& dbname, const Options& options);
-
 }  // namespace frontlevel
 #endif  // STORAGE_FRONTLEVEL_INCLUDE_DB_H_
