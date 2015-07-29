@@ -1,0 +1,7 @@
+currently configured for leveldb backend.
+
+ - expects frontlevel lib already compiled in ../src
+ - expects compiled leveldb lib in ../../leveldb
+
+directory paths set in the Makefile ( e.g. FLDIR, LDBDIR )
+
