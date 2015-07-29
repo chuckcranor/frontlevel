@@ -2,6 +2,7 @@
 frontlevel code
 
 to compile: cd src && make               (use GNU make for all)
+
 to do basic tests: cd src && make check
 
 to do dbtests:
