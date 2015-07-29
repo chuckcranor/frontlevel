@@ -2,8 +2,8 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file. See the AUTHORS file for names of contributors.
 
-FLDIR=../leveldb
-LDBDIR=../orig_leveldb
+FLDIR=../../src
+LDBDIR=../../../leveldb
 #-----------------------------------------------
 # Uncomment exactly one of the lines labelled (A), (B), and (C) below
 # to switch between compilation modes.
